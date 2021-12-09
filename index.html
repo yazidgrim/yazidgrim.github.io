@@ -18,8 +18,8 @@ input {
 }
 
 </style>
-<input autofocus maxlength=5 placeholder="type a Postal Code">
-<script src="d3.v3.min.js"></script>
+<input autofocus maxlength=5 placeholder="type a zipcode">
+<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
 var width = 960,
@@ -29,14 +29,14 @@ var projection = d3.geo.albersUsa()
     .scale(1000)
     .translate([width / 2, height / 2]);
 
-d3.csv("CanadianPostalCodes.csv", function(error, zipcodes) {
+d3.tsv("zipcodes.tsv", function(error, zipcodes) {
   if (error) throw error;
 
   var zip0;
 
   // Compute projected locations of each zipcode.
   zipcodes.forEach(function(d) {
-    var p = projection([+d.Longitude, +d.Latitude]);
+    var p = projection([+d.lon, +d.lat]);
     if (p) d.x = Math.round(p[0]), d.y = Math.round(p[1]);
   });
 
