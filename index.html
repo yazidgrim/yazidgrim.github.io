@@ -18,25 +18,26 @@ input {
 }
 
 </style>
-<input autofocus maxlength=5 placeholder="type a zipcode">
+<input autofocus maxlength=5 placeholder="type a postal code">
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 
 var width = 960,
     height = 500;
 
-var projection = d3.geo.albersUsa()
-    .scale(1000)
-    .translate([width / 2, height / 2]);
+var projection = d3.geo.mercator()
+    .scale((width - 3) / (2 * Math.PI))
+    .center([45, 55])
+    //.translate([width / 2, height / 2]);
 
-d3.tsv("zipcodes.tsv", function(error, zipcodes) {
+d3.csv("CanadianPostalCodes.csv", function(error, zipcodes) {
   if (error) throw error;
 
   var zip0;
 
   // Compute projected locations of each zipcode.
   zipcodes.forEach(function(d) {
-    var p = projection([+d.lon, +d.lat]);
+    var p = projection([+d.Longitude, +d.Latitude]);
     if (p) d.x = Math.round(p[0]), d.y = Math.round(p[1]);
   });
 
@@ -71,7 +72,7 @@ d3.tsv("zipcodes.tsv", function(error, zipcodes) {
     context.fillStyle = zip1 ? "#aaa" : (zip1 = "*", "#000");
     zipcodes.forEach(function(d) {
       for (var i = 0, n = zip1.length; i < n; ++i) {
-        if (d.zip[i] !== zip1[i]) {
+        if (d.PostalCode[i] !== zip1[i]) {
           context.fillRect(d.x, d.y, 1, 1);
           return;
         }
@@ -83,7 +84,7 @@ d3.tsv("zipcodes.tsv", function(error, zipcodes) {
     context.fillStyle = "#f00";
     zipcodes.forEach(function(d) {
       for (var i = 0, n = zip1.length; i < n; ++i) {
-        if (d.zip[i] !== zip1[i]) {
+        if (d.PostalCode[i] !== zip1[i]) {
           return;
         }
       }
